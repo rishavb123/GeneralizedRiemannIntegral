@@ -17,17 +17,17 @@ class Interval(CustomInterval):
     EMPTY = Interval(0, 0, closed=False)
 
     def __init__(self, a, b, closed=True):
-        self.a = a
-        self.b = b
-        self.closed = closed
+        self.__a = a
+        self.__b = b
+        self.__closed = closed
         self.size = b - a
-        self.C = Union((Interval(float("-inf"), a, closed=not self.closed), Interval(b, float("inf"), closed=not self.closed)))
+        self.C = Union((Interval(float("-inf"), a, closed=not closed), Interval(b, float("inf"), closed=not closed)))
 
     def contains(self, x):
-        return a <= x <= b if closed else a < x < b
+        return self.__a <= x <= self.__b if self.__closed else self.__a < x < self.__b
 
     def __str__(self):
-        return ('[' if closed else '(') + str(a) + ", " + str(b) + (']' if closed else ')')
+        return ('[' if self.__closed else '(') + str(self.__a) + ", " + str(self.__b) + (']' if self.__closed else ')')
 
     @staticmethod
     def single_value(x):
@@ -39,10 +39,9 @@ class Union(CustomInterval):
         self.intervals = intervals
 
     def contains(self, x):
-        tag = False
         for i in intervals:
-            if i.contains(x): tag = True
-        return tag
+            if i.contains(x): return True
+        return False
 
     def __str__(self):
         return ' U '.join([str(i) for i in intervals])
@@ -53,7 +52,9 @@ class Intersection(CustomInterval):
         self.intervals = intervals
 
     def contains(self, x):
-        tag = True
         for i in intervals:
-            if not i.contains(x): tag = False
-        return tag
+            if not i.contains(x): return False
+        return True
+
+    def __str__(self):
+        return ' ⋂ '.join([str(i) for i in intervals])
