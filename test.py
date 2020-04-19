@@ -1,6 +1,8 @@
+from sys import argv
+
 from intervals import *
 from partitions import *
-from sys import argv
+from gauge import Gauge
 
 class Test:
 
@@ -38,6 +40,15 @@ class Test:
         print("Interval:", I)
         print("Partition:", P)
         print("Tagged Partition:", T)
+
+    @staticmethod
+    def gauges():
+        end = 10
+        I = Interval(0, end, closed=False)
+        G = Gauge(lambda x: 2 * x, I)
+        print(G(2))
+        C = Gauge.constant(2)
+        print(G(10000))
 
 for arg in argv[1:]:
     print('\n---------------------------' + arg.upper() + ' TEST---------------------------')
