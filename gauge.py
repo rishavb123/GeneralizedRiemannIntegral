@@ -10,7 +10,7 @@ class Gauge:
         self.__validate__()
 
     def __validate__(self):
-        for x in self.interval:
+        for x in self.interval.discretize():
             assert self.delta(x) > 0
 
     def __call__(self, x):
