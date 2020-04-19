@@ -1,7 +1,18 @@
 class CustomInterval:
+
+    def __contains__(self, item):
+        return self.contains(item)
+
+    def __len__(self):
+        return self.size()
+
     def contains(self, x):
         print("Using default contains method, please override this")
         return False
+
+    def size(self):
+        print("Using default size method, please override this")
+        return -1
 
     @staticmethod
     def union(i1, i2):
@@ -18,10 +29,13 @@ class Interval(CustomInterval):
         self.__a = a
         self.__b = b
         self.__closed = closed
-        self.size = b - a
+        self.__size = b - a
 
     def contains(self, x):
         return self.__a <= x <= self.__b if self.__closed else self.__a < x < self.__b
+
+    def size(self):
+        return self.__size
 
     def __str__(self):
         return ('[' if self.__closed else '(') + str(self.__a) + ", " + str(self.__b) + (']' if self.__closed else ')')
