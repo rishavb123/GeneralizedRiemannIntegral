@@ -14,14 +14,11 @@ class CustomInterval:
 
 class Interval(CustomInterval):
 
-    EMPTY = Interval(0, 0, closed=False)
-
     def __init__(self, a, b, closed=True):
         self.__a = a
         self.__b = b
         self.__closed = closed
         self.size = b - a
-        self.C = Union((Interval(float("-inf"), a, closed=not closed), Interval(b, float("inf"), closed=not closed)))
 
     def contains(self, x):
         return self.__a <= x <= self.__b if self.__closed else self.__a < x < self.__b
@@ -33,18 +30,22 @@ class Interval(CustomInterval):
     def single_value(x):
         return Interval(x, x)
 
+    @staticmethod
+    def empty():
+        return Interval(0, 0)
+
 class Union(CustomInterval):
 
     def __init__(self, intervals):
         self.intervals = intervals
 
     def contains(self, x):
-        for i in intervals:
+        for i in self.intervals:
             if i.contains(x): return True
         return False
 
     def __str__(self):
-        return ' U '.join([str(i) for i in intervals])
+        return '(' + ') U ('.join([str(i) for i in self.intervals]) + ')'
 
 class Intersection(CustomInterval):
 
@@ -52,9 +53,20 @@ class Intersection(CustomInterval):
         self.intervals = intervals
 
     def contains(self, x):
-        for i in intervals:
+        for i in self.intervals:
             if not i.contains(x): return False
         return True
 
     def __str__(self):
-        return ' ⋂ '.join([str(i) for i in intervals])
+        return '(' + ') n ('.join([str(i) for i in self.intervals]) + ')'
+
+def C(CustomInterval):
+
+    def __init__(self, interval):
+        self.interval = interval
+
+    def contains(self, x):
+        return not self.interval.contains(x)
+
+    def __str__(self):
+        return '(' + str(self.interval) + ')^C'
