@@ -132,4 +132,4 @@ def C(CustomInterval):
         return '(' + str(self.interval) + ')^C'
 
 EMPTY = Interval(0, 0)
-R = Interval(-np.inf, np.inf)
+R = Interval(-np.inf, np.inf, closed=False)
