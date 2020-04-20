@@ -53,6 +53,9 @@ class Interval(CustomInterval):
     def size(self):
         return self.__size
 
+    def get_bounds(self):
+        return self.__a, self.__b
+
     def discretize(self):
         if self.__discrete is None:
             a = self.__a
