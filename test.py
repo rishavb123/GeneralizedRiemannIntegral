@@ -50,6 +50,22 @@ class Test:
         C = Gauge.constant(2)
         print(C(10000))
 
+    @staticmethod
+    def delta_fine():
+        end = 10
+        I = Interval(1, end)
+        G = Gauge(lambda x: x ** 2 / 120, I)
+        T = TaggedPartition.generate_delta_fine(I, G)
+        print(T, T.is_delta_fine(G))
+        last_c = -1
+        for c in np.arange(10, 0, -0.001):
+            if not T.is_delta_fine(Gauge.constant(c)):
+                print(last_c)
+                return
+            last_c = c
+
+
 for arg in argv[1:]:
     print('\n---------------------------' + arg.upper() + ' TEST---------------------------')
     getattr(Test, arg)()
+

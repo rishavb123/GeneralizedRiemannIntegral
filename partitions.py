@@ -1,10 +1,12 @@
+import numpy as np
+
 from intervals import Interval
 
 class Partition:
 
     def __init__(self, nums, interval, validate=True):
-        self.nums = nums
-        self.nums.sort()
+        self.x = nums
+        self.x.sort()
         self.n = len(nums) - 1
         self.interval = interval
         if validate:
@@ -12,20 +14,20 @@ class Partition:
         self.__subintervals = {}
 
     def __validate__(self):
-        for i in range(len(self.nums)):
-            assert self.interval.contains(self.nums[i])
+        for i in range(len(self.x)):
+            assert self.interval.contains(self.x[i])
 
     def get_subinterval(self, k):
-        assert k > 0
+        assert k > 0 and k <= self.n
         if k not in self.__subintervals:
-            self.__subintervals[k] = Interval(self.nums[k - 1], self.nums[k])
+            self.__subintervals[k] = Interval(self.x[k - 1], self.x[k])
         return self.__subintervals[k]
 
     def tag(self, c):
-        return TaggedPartition(self.nums, self.interval, c)
+        return TaggedPartition(self.x, self.interval, c)
 
     def __str__(self):
-        return '{' + ' < '.join([str(n) for n in self.nums]) + '}'
+        return '{' + ' < '.join([str(n) for n in self.x]) + '}'
 
 class TaggedPartition(Partition):
 
@@ -44,5 +46,29 @@ class TaggedPartition(Partition):
     def c(self, k):
         return self.__c[k - 1]
 
+    def is_delta_fine(self, delta):
+        for k in range(1, self.n + 1):
+            if self.x[k] - self.x[k - 1] > delta(self.c(k)):
+                return False
+        return True
+
     def __str__(self):
         return '(' + super().__str__() + ', {' + str(self.__c)[1:-1] + '})'
+
+    @staticmethod
+    def generate_delta_fine(interval, delta, n=1000):
+        assert isinstance(interval, Interval)
+        a, b = interval.get_bounds()
+        def generate(a, b):
+            s = (b - a) / n
+            r = np.arange(a, b, s)
+            for x in r:
+                if b - a < delta(x, validate=False):
+                    return [a], [x]
+            mid = a + (b - a) / 2
+            x1, c1 = generate(a, mid)
+            x2, c2 = generate(mid, b)
+            return x1 + x2, c1 + c2
+        x, c = generate(a, b)
+        x.append(b)
+        return TaggedPartition(x, interval, c)
