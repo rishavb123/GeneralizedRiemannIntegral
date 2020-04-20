@@ -1,13 +1,14 @@
 import numpy as np
 
-from intervals import Interval
+from intervals import R
 
 class Gauge:
 
-    def __init__(self, func, interval):
+    def __init__(self, func, interval, validate=True):
         self.delta = func
         self.interval = interval
-        self.__validate__()
+        if validate:
+            self.__validate__()
 
     def __validate__(self):
         for x in self.interval.discretize():
@@ -20,4 +21,4 @@ class Gauge:
     @staticmethod
     def constant(delta):
         assert delta > 0
-        return Gauge(lambda:delta, Interval(-np.inf, np.inf, closed=False, iters=1))
+        return Gauge(lambda x:delta, R, validate=False)
