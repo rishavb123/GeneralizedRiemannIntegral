@@ -48,7 +48,7 @@ class Test:
         G = Gauge(lambda x: 2 * x, I)
         print(G(2))
         C = Gauge.constant(2)
-        print(G(10000))
+        print(C(10000))
 
 for arg in argv[1:]:
     print('\n---------------------------' + arg.upper() + ' TEST---------------------------')
