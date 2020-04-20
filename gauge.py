@@ -14,8 +14,9 @@ class Gauge:
         for x in self.interval.discretize():
             assert self.delta(x) > 0
 
-    def __call__(self, x):
-        assert self.interval.contains(x)
+    def __call__(self, x, validate=True):
+        if validate:
+            assert self.interval.contains(x)
         return self.delta(x)
 
     @staticmethod
