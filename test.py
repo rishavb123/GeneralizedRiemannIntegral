@@ -10,7 +10,6 @@ class Test:
     def intervals():
         A = Interval(0, 5)
         B = Interval(4, 10, closed=False)
-
         C = Interval.intersection(A, B)
         D = Interval.union(A, B)
 
