@@ -67,4 +67,3 @@ class Test:
 for arg in argv[1:]:
     print('\n---------------------------' + arg.upper() + ' TEST---------------------------')
     getattr(Test, arg)()
-
